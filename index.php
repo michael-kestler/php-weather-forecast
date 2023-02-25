@@ -1,9 +1,14 @@
 <?php
 
+
+
+if($_POST["city"]){
+    echo file_get_contents("https://www.weather-forecast.com/locations/" . $_POST["city"] . "/forecasts/latest");
+}
+//create html page with an input  and submit button
+//have to grab input from the page
 //obtain 3 day forecast data from weather-forecast.com
 //need to get 3 day forecast for city based on user input
-//have to grab input from the page
-//create html page with an input  and submit button
 //need validation and error message for city cannot be found
 //use explode function to create an array from data in string format and then access that data
 
@@ -17,6 +22,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+            background-image: url('sunset.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <title>Weather Scraper</title>
 </head>
