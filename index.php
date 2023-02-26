@@ -3,7 +3,7 @@
     $error = "";
 
 if(array_key_exists('city', $_GET)){
-    $city = str_replace(" ", " ", $_GET['city']);
+    $city = str_replace(" ", "-", $_GET['city']);
 
     $file_headers = @get_headers("https://www.weather-forecast.com/locations/" . $city . "/forecasts/latest");
 
@@ -17,12 +17,17 @@ if(array_key_exists('city', $_GET)){
             explode('Weather Today</h2> (1&ndash;3 days)</div><p class="b-forecast__table-description-content"><span class="phrase">',
             $forecastPage);
 
-        if(sizeOf($secondPageArray) > 1) {
-            $secondPageArray = explode('</span></p></td>', $pageArray[1]);
-        }   
-        
         if(sizeOf($pageArray) > 1) {
-            $weather = $secondPageArray[0];
+            $secondPageArray = explode('</span></p></td>', $pageArray[1]);
+                
+
+        if(sizeOf($secondPageArray) > 1) {
+            $weather = $secondPageArray[0];    
+        }   
+            else {
+                $error = "That city could not be found.";
+            }
+        
         }   
         else {
             $error = "That city could not be found.";
@@ -33,13 +38,6 @@ if(array_key_exists('city', $_GET)){
 } else {
     $error = "That city could not be found.";
 }//end of array key exists test
-
-
-   
-
-    
-
-   
 
 //obtain 3 day forecast data from weather-forecast.com
 //need to get 3 day forecast for city based on user input
@@ -85,8 +83,8 @@ if(array_key_exists('city', $_GET)){
 </head>
 <body>
     <div class="container">
-            <h1>What's The Weather?</h1>
-            <form>
+            <h1>What's the Weather?</h1>
+            <form method>
                 <fieldset class="form-group">
                     <label for="city">Enter the name of a city.</label>
                     <input type="text" class="form-control" id="city" name="city" placeholder="E.g., Paris, Madrid"
