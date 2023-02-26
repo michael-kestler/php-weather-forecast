@@ -88,14 +88,27 @@ if(array_key_exists('city', $GET)){
             <form>
                 <fieldset class="form-group">
                     <label for="city">Enter the name of a city.</label>
-                    <input type="text" class="form-control" id="city" name="city" placeholder="E.g., Paris, Madrid">
+                    <input type="text" class="form-control" id="city" name="city" placeholder="E.g., Paris, Madrid"
+                    value = "<?php
+                        if(array_key_exists('city', $_GET)){
+                            echo $_GET['city'];
+                        }
+                    ?>">
                 </fieldset>
                 <button type="submit" id="submit" class="btn btn-primary">Submit</button>
             </form>
 
-            
-            }
-
+            <div id="weather"> 
+                <?php
+                    if($weather){
+                        echo '<div class="alert alert-success" role="alert">' . $weather . '</div>';
+                    }
+                    else if($error){
+                        echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
+                        
+                    }    
+                ?>    
+        </div>
     </div> <!-- end of container class div -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
