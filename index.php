@@ -1,25 +1,44 @@
 <?php
-if($_POST["city"]){//have to grab input from the page
-    $cityCode = file_get_contents("https://www.weather-forecast.com/locations/" . $_POST["city"] . "/forecasts/latest");
-    $cityCode = str_replace("<", "<>", $cityCode);
 
-    $splitCityCode = explode("<", $cityCode);
 
-    $openingTag = array_search('Weather Today</h2> (1&ndash;3 days)</div><p class="b-forecast__table-description-content"><span class="phrase">', $splitCityCode, true);
+if(array_key_exists('city', $GET)){
+    $city = str_replace(" ", " ", $city);
 
-    $closingTag = array_search('/span', $splitCityCode, true);
+    $file_headers = @get_headers("https://www.weather-forecast.com/locations/" . $city . "/forecasts/latest");
 
-    $i = $openingTag;
-    $total = "";
-    while($i < $closingTag) {
-        $total = $total . $splitCityCode[$i];
-        $i = $i + 1;
+    if($file_headers[0] == "HTTP/1.1 404 Not Found") {
+        $error = "That city could not be found.";
     }
-   
-}
+    else {
+        $forecastPage = file_get_contents("https://www.weather-forecast.com/locations/" . $city . "/forecasts/latest");
+        
+        $pageArray = 
+            explode('Weather Today</h2> (1&ndash;3 days)</div><p class="b-forecast__table-description-content"><span class="phrase">',
+            $forecastPage);
 
-$final = substr($total, 5);
-    echo $final;
+        if(sizeOf($secondPageArray) > 1) {
+            $secondPageArray = explode('</span></p></td>', $pageArray[1]);
+        }   
+        
+        if(sizeOf($pageArray) > 1) {
+            $weather = $secondPageArray[0];
+        }   
+        else {
+            $error = "That city could not be found.";
+        }
+    
+        }//end file headers NOT empty
+
+} else {
+    $error = "That city could not be found.";
+}//end of array key exists test
+
+
+   
+
+    
+
+   
 
 //obtain 3 day forecast data from weather-forecast.com
 //need to get 3 day forecast for city based on user input
@@ -37,6 +56,7 @@ $final = substr($total, 5);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <!-- CSS -->
     <style>
     html {
             background: url('sunset.jpg') no-repeat center center fixed;
@@ -55,23 +75,32 @@ $final = substr($total, 5);
     input {
         margin: 40px 0;
     }
+
+    #weather {
+        margin-top: 15px;
+    }
     </style>
     <title>Weather Scraper</title>
 </head>
 <body>
     <div class="container">
             <h1>What's The Weather?</h1>
-            <form method="post">
+            <form>
                 <fieldset class="form-group">
                     <label for="city">Enter the name of a city.</label>
                     <input type="text" class="form-control" id="city" name="city" placeholder="E.g., Paris, Madrid">
                 </fieldset>
-                <button type="submit" id="submit" class="btn btn-primary btn-sm">Submit</button>
+                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
             </form>
-    </div>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+            
+            }
+
+    </div> <!-- end of container class div -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" 
+    crossorigin="anonymous"></script>
 </body>
 </html>
